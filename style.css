@@ -67,3 +67,22 @@ body {
     margin-bottom: 20px;
 }
 
+.search-bar {
+    padding: 10px;
+    border: 1px solid #575757;
+    border-radius: 6px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.note-list {
+    list-style: none;
+}
+
+.note-item {
+    padding: 15px;
+    background-color: var(--primary-purple);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
