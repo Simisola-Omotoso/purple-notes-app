@@ -52,3 +52,18 @@ body {
 .folder-item svg {
     margin-right: 10px;
 }
+
+.notes-section {
+    padding: 20px;
+    background-color: rgb(39, 39, 39);
+    border-right: 1px solid #575757;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--light-purple);
+    margin-bottom: 20px;
+}
+
