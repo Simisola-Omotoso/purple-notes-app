@@ -28,5 +28,5 @@ body {
     justify-content: space-between;
     align-items: center;
     color: var(--primary-purple);
-    
+    margin-bottom: 20px;
 }
