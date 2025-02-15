@@ -116,7 +116,7 @@ body {
 
 .editor-title {
     font-size: 2.5em;
-    color: var(--text-white);
+    color: var(--light-purple);
     margin-bottom: 15px;
 }
 
@@ -129,7 +129,7 @@ body {
 .toolbar-button {
     background: none;
     border: none;
-    color: var(--text-white);
+    color: var(--light-purple);
     font-size: 1.2em;
     cursor: pointer;
     padding: 5px 10px;
@@ -138,7 +138,6 @@ body {
 
 .toolbar-button:hover {
     background-color: var(--primary-purple);
-    color: var(--light-purple);
 }
 
 .editor-content {
