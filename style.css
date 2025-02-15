@@ -135,3 +135,13 @@ body {
     padding: 5px 10px;
     border-radius: 4px;
 }
+
+.toolbar-button:hover {
+    background-color: var(--primary-purple);
+    color: var(--light-purple);
+}
+
+.editor-content {
+    color: var(--text-white);
+    line-height: 1.6;
+}
