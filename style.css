@@ -27,6 +27,28 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--primary-purple);
+    color: var(--light-purple);
     margin-bottom: 20px;
+}
+
+.folder-list {
+    list-style: none;
+}
+
+.folder-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: var(--text-white);
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.folder-item.active {
+    background-color: var(--primary-purple);
+    color: var(--light-purple);
+}
+
+.folder-item svg {
+    margin-right: 10px;
 }
