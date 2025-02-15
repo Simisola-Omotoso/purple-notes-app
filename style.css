@@ -20,4 +20,13 @@ body {
 .sidebar {
     padding: 20px;
     background-color: rgb(39, 39, 39);
+    border-right: 1px solid #575757;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--primary-purple);
+    
 }
