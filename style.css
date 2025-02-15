@@ -2,6 +2,8 @@
     --primary-purple: rgb(75, 9, 75);
     --light-purple: rgb(205, 126, 219);
     --text-white: rgb(255, 255, 255);
+    --dark-bg: rgb(39, 39, 39);
+    --border-color: 575757;
 }
 
 * {
@@ -15,6 +17,8 @@ body {
     display: grid;
     grid-template-columns: 250px 1fr 1fr;
     min-height: 100vh;
+    background-color: var(--dark-bg);
+    color: var(--text-white);
 }
 
 .sidebar {
@@ -73,6 +77,12 @@ body {
     border-radius: 6px;
     width: 100%;
     margin-bottom: 20px;
+    background-color: var(--dark-bg);
+    color: var(--text-white);
+}
+
+.search-bar::placeholder {
+    color: var(--border-color);
 }
 
 .note-list {
