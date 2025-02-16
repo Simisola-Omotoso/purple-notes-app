@@ -53,7 +53,6 @@ let notes = [
 let activeNote = notes[0];
 
 // DOM Elements
-
 const folderList = document.querySelector('.folder-list');
 const noteList = document.querySelector('.note-list');
 const editorTitle = document.querySelector('.editor-title');
@@ -62,9 +61,6 @@ const searchBar = document.querySelector('.search-bar');
 const addFolderBtn = document.querySelector('.sidebar-header');
 const addNoteBtn = document.querySelector('.notes-header .add-button'); // More specific selector
 const toolbarButtons = document.querySelector('.toolbar-button');
-
-// Event Listeners
-
 function initializeEventListeners() {
     // Folder selection
     folderList.addEventListener('click', (e) => {
@@ -98,15 +94,22 @@ function initializeEventListeners() {
         button.addEventListener('click', handleToolbarAction);
     });
 
-    // Editor content changes
-    editorContent.addEventListener('input', () => {
-        saveNoteContent(editorContent.textContent);
+    editorContent.addEventListener('input', (e) => {
+        const content = e.target.textContent;
+        // You could save this to localStorage or send to a backend
     });
 
-    // Editor content changes with debounce
+    editorContent.addEventListener('focus', () => {
+        editorContent.classList.add('focused');
+    });
+
+    editorContent.addEventListener('blur', () => {
+        editorContent.classList.remove('focused');
+    });
+
     const debouncedSave = debounce((content) => {
         saveNoteContent(content);
-    }, 300); // Updates after 300ms of no typing
+    }, 300);
 
     editorContent.addEventListener('input', (e) => {
         debouncedSave(e.target.textContent);
