@@ -214,3 +214,11 @@ function renderFoldersList() {
 }
 
 // Initialize app
+function initializeApp() {
+    renderFoldersList();
+    refreshNotesList();
+    initializeEventListeners();
+}
+
+// Start the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeApp);
