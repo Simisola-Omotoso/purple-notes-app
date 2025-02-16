@@ -58,7 +58,7 @@ const editorContent = document.querySelector('.editor-content');
 const searchBar = document.querySelector('.search-bar');
 const addFolderBtn = document.querySelector('.sidebar-header');
 const addNoteBtn = document.querySelector('.notes-header .add-button'); // More specific selector
-const toolbarButtons = document.querySelector('.toolbar-button');
+const toolbarButtons = document.querySelectorAll('.toolbar-button');
 
 function initializeEventListeners() {
     folderList.addEventListener('click', (e) => {
@@ -267,7 +267,7 @@ function updateNoteTitle(event, noteId) {
     }
 }
 
-function executeCommand(command) {
+function executeCommand(command, value = null) {
     document.execCommand(command, false, null);
 }
 
