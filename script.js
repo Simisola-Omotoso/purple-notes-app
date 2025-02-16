@@ -292,11 +292,21 @@ toolbarButtons.forEach(button => {
                 break;
             case '🔗':
                 const url = prompt('Enter the link URL:');
-                executeCommand('createLink', url);
+                if (url) {
+                    executeCommand('createLink', url);
+                }
                 break;
             case 'S':
                 // Implement save functionality here
                 alert('Save note implemented yet.');
+                break;
+            case '↩':
+                // Implement undo functionality here
+                alert('Undo functionality not implemented yet.');
+                break;
+            case '↪':
+                // Implement redo functionality here
+                alert('Redo functionality not implemented yet.');
                 break;
             default:
                 break;
