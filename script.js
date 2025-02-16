@@ -10,7 +10,6 @@ function debounce(func, wait) {
     };
 }
 
-// Data structures to store notes & folders
 let folders = [
     { id: 1, name: 'Personal', active: true },
     { id: 2, name: 'Work', active: false },
@@ -18,7 +17,6 @@ let folders = [
     { id: 4, name: 'Archive', active: false },
 ];
 
-// Keep track of notes
 let notes = [
     {
         id: 1,
@@ -52,7 +50,6 @@ let notes = [
 
 let activeNote = notes[0];
 
-// DOM Elements
 const folderList = document.querySelector('.folder-list');
 const noteList = document.querySelector('.note-list');
 const editorTitle = document.querySelector('.editor-title');
@@ -61,8 +58,8 @@ const searchBar = document.querySelector('.search-bar');
 const addFolderBtn = document.querySelector('.sidebar-header');
 const addNoteBtn = document.querySelector('.notes-header .add-button'); // More specific selector
 const toolbarButtons = document.querySelector('.toolbar-button');
+
 function initializeEventListeners() {
-    // Folder selection
     folderList.addEventListener('click', (e) => {
         const folderItem = e.target.closest('.folder-item');
         if (folderItem) {
@@ -70,7 +67,6 @@ function initializeEventListeners() {
         }
     });
 
-    // Note selection
     noteList.addEventListener('click', (e) => {
         const noteItem = e.target.closest('.note-item');
         if (noteItem) {
@@ -78,25 +74,20 @@ function initializeEventListeners() {
         }
     });
 
-    // Search functionality
     searchBar.addEventListener('input', (e) => {
         filterNotes(e.target.value);
     });
 
-    // Add new folder
     addFolderBtn.addEventListener('click', createNewFolder);
 
-    // Add new note
     addNoteBtn.addEventListener('click', createNewNote);
 
-    // Toolbar buttons
     toolbarButtons.forEach(button => {
         button.addEventListener('click', handleToolbarAction);
     });
 
     editorContent.addEventListener('input', (e) => {
         const content = e.target.textContent;
-        // You could save this to localStorage or send to a backend
     });
 
     editorContent.addEventListener('focus', () => {
@@ -123,17 +114,13 @@ function initializeEventListeners() {
     });
 }
 
-// Functions
 function setActiveFolder(folderElement) {
-    // Remove active class from all folders
     document.querySelectorAll('.folder-item').forEach(folder => {
         folder.classList.remove('active');
     });
 
-    // Add active class to selected folder
     folderElement.classList.add('active');
 
-    // Update folders data structure and refresh notes list
     const folderName = folderElement.textContent.trim();
     folders.forEach(folder => {
         folder.active = folder.name === folderName;
@@ -146,11 +133,9 @@ function setActiveNote(noteElement) {
     const noteTitle = noteElement.querySelector('.note-title').textContent;
     activeNote = notes.find(note => note.title === noteTitle);
 
-    // Update editor
     editorTitle.textContent = activeNote.title;
     editorContent.textContent = activeNote.content;
 
-    // Update visual selection
     document.querySelectorAll('.note-item').forEach(note => {
         note.classList.remove('active');
     });
@@ -188,38 +173,40 @@ function createNewNote() {
         folderId: activeFolder.id
     };
 
-    // Add new note to beginning of array
     notes.unshift(newNote);
 
-    // Set as active note
     activeNote = newNote;
 
-    // Update editor
     editorTitle.textContent = newNote.title;
     editorContent.textContent = newNote.content;
 
-    // Refresh the notes list to show the new note
     refreshNotesList();
 }
 
 function handleToolbarAction(e) {
-    const action = e.currentTarget.querySelector('i').classList[1];
+    const action = e.currentTarget.dataset.action;
 
     switch(action) {
-        case 'fa-bold':
+        case 'bold':
             document.execCommand('bold', false);
             break;
-        case 'fa-italic':
+        case 'italic':
             document.execCommand('italic', false);
             break;
-        case 'fa-link':
+        case 'underline':
+            document.execCommand('underline', false);
+            break;
+        case 'unordered-list':
+            document.execCommand('insertUnorderedList', false);
+            break;
+        case 'ordered-list':
+            document.execCommand('insertOrderedList', false);
+            break;
+        case 'link':
             const url = prompt('Enter URL:');
             if (url) {
                 document.execCommand('createLink', false, url);
             }
-            break;
-        case 'fa-bars':
-            document.execCommand('insertUnorderedList', false);
             break;
     }
 }
@@ -268,12 +255,10 @@ function updateNoteTitle(event, noteId) {
     }
 }
 
-// Initialize app
 function initializeApp() {
     renderFoldersList();
     refreshNotesList();
     initializeEventListeners();
 }
 
-// Start the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeApp);
