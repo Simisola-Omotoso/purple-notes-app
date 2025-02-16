@@ -110,3 +110,107 @@ function setActiveFolder(folderElement) {
 
     refreshNotesList();
 }
+
+function setActiveNote(noteElement) {
+    const noteTitle = noteElement.querySelector('.note-title').textContent;
+    activeNote = notes.find(note => note.title === noteTitle);
+
+    // Update editor
+    editorTitle.textContent = activeNote.title;
+    editorContent.textContent = activeNote.content;
+
+    // Update visual selection
+    document.querySelectorAll('.note-item').forEach(note => {
+        note.classList.remove('active');
+    });
+    noteElement.classList.add('active');
+}
+
+function filterNotes(searchTerm) {
+    const filteredNotes = notes.filter(note =>
+        note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        note.content.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    renderNotesList(filteredNotes);
+}
+
+function createNewFolder() {
+    const folderName = prompt('Enter folder name:');
+    if (folderName) {
+        const newFolder = {
+            id: folders.length + 1,
+            name: folderName,
+            active: false
+        };
+        folders.push(newFolder);
+        renderFoldersList();
+    }
+}
+
+function createNewNote() {
+    const activeFolder = folders.find(folder => folder.active);
+    const newNote = {
+        id: notes.length + 1,
+        title: 'Untitled',
+        content: '',
+        date: new Date().toLocaleDateString(),
+        folderId: activeFolder.id
+    };
+    notes.push(newNote);
+    renderNotesList();
+}
+
+function handleToolbarAction(e) {
+    const action = e.currentTarget.querySelector('i').classList[1];
+
+    switch(action) {
+        case 'fa-bold':
+            document.execCommand('bold', false);
+            break;
+        case 'fa-italic':
+            document.execCommand('italic', false);
+            break;
+        case 'fa-link':
+            const url = prompt('Enter URL:');
+            if (url) {
+                document.execCommand('createLink', false, url);
+            }
+            break;
+        case 'fa-bars':
+            document.execCommand('insertUnorderedList', false);
+            break;
+    }
+}
+
+function saveNoteContent(content) {
+    if (activeNote) {
+        activeNote.content = content;
+        // Here you would typically implement auto-save to localStorage or backend
+    }
+}
+
+function refreshNotesList() {
+    const activeFolder = folders.find(folder => folder.active);
+    const folderNotes = notes.filter(note => note.folderId === activeFolder.id);
+    renderNotesList(folderNotes);
+}
+
+function renderNotesList(notesToRender) {
+    noteList.innerHTML = notesToRender.map(note => `
+        <li class="note-item ${note.id === activeNote.id ? 'active' : ''}">
+            <div class="note-title">${note.title}</div>
+            <div class="note-date">${note.date}</div>
+        </li>
+    `).join('');
+}
+
+function renderFoldersList() {
+    folderList.innerHTML = folders.map(folder => `
+        <li class="folder-item ${folder.active ? 'active' : ''}">
+            <i class="far fa-folder"></i>
+            ${folder.name}
+        </li>
+    `).join('');
+}
+
+// Initialize app
