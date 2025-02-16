@@ -6,6 +6,15 @@
     --border-color: 575757;
 }
 
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 1fr;
+    }
+    .notes-section, .editor {
+        width: 100%;
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -110,6 +119,11 @@ body {
     color: var(--border-color);
 }
 
+.search-bar:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+}
+
 .note-list {
     list-style: none;
 }
@@ -125,6 +139,11 @@ body {
 
 .note-item.active {
     background-color: var(--light-purple);
+}
+
+.note-item:hover {
+    background-color: var(--light-purple);
+    transition: background-color 0.3s;
 }
 
 .note-date {
@@ -185,4 +204,8 @@ body {
 
 .editor-content.focused {
     background-color: rgba(255, 255, 255, 0.05);
+}
+
+.editor-content:focus {
+    border: 1px solid var(--primary-purple);
 }
