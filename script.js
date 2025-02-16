@@ -49,6 +49,7 @@ let notes = [
 ];
 
 let activeNote = notes[0];
+let contentHistory = [];
 
 const folderList = document.querySelector('.folder-list');
 const noteList = document.querySelector('.note-list');
@@ -88,6 +89,8 @@ function initializeEventListeners() {
 
     editorContent.addEventListener('input', (e) => {
         const content = e.target.textContent;
+        contentHistory.push(content);
+        debouncedSave(content);
     });
 
     editorContent.addEventListener('focus', () => {
@@ -208,6 +211,15 @@ function handleToolbarAction(e) {
                 document.execCommand('createLink', false, url);
             }
             break;
+        case '↩':
+            if (contentHistory.length > 0) {
+                const lastContent = contentHistory.pop();
+                editorContent.textContent = lastContent;
+                saveNoteContent(lastContent);
+            } else {
+                alert('No more actions to undo.');
+            }
+            break;
     }
 }
 
@@ -254,6 +266,43 @@ function updateNoteTitle(event, noteId) {
         event.target.textContent = noteToUpdate.title;
     }
 }
+
+function executeCommand(command) {
+    document.execCommand(command, false, null);
+}
+
+toolbarButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const command = button.textContent.trim();
+        switch (command) {
+            case 'B':
+                executeCommand('bold');
+                break;
+            case 'I':
+                executeCommand('italic');
+                break;
+            case '_':
+                executeCommand('underline');
+                break;
+            case '•':
+                executeCommand('insertUnorderedList');
+                break;
+            case '1.':
+                executeCommand('insertOrderedList');
+                break;
+            case '🔗':
+                const url = prompt('Enter the link URL:');
+                executeCommand('createLink', url);
+                break;
+            case 'S':
+                // Implement save functionality here
+                alert('Save note implemented yet.');
+                break;
+            default:
+                break;
+        }
+    })
+})
 
 function initializeApp() {
     renderFoldersList();
