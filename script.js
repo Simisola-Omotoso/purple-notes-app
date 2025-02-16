@@ -117,7 +117,7 @@ function initializeEventListeners() {
 
     editorTitle.addEventListener('input', (e) => {
         if (activeNote) {
-            activeNote.title = e.target.textContent;
+            activeNote.title = e.target.textContent.trim();
             refreshNotesList();
         }
     });
@@ -244,7 +244,7 @@ function refreshNotesList() {
 function renderNotesList(notesToRender = notes) {
     noteList.innerHTML = notesToRender.map(note => `
         <li class="note-item ${note === activeNote ? 'active' : ''}">
-            <div class="note-title" contenteditable="true" onblur="updateNoteTitle(event, '${note.id}')">${note.title}</div>
+            <div class="note-title">${note.title}</div>
             <div class="note-preview">${note.content.substring(0, 50)}${note.content.length > 50 ? '...' : ''}</div>
             <div class="note-date">${note.date}</div>
         </li>
