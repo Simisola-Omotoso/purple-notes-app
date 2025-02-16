@@ -23,7 +23,7 @@ let notes = [
     {
         id: 1,
         title: 'Meeting Notes',
-        content: "Today's meeting covered several key points...",
+        content: '',
         date: '2/15/2025',
         folderId: 1
     },
