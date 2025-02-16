@@ -1,3 +1,15 @@
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Data structures to store notes & folders
 let folders = [
     { id: 1, name: 'Personal', active: true },
@@ -89,6 +101,22 @@ function initializeEventListeners() {
     // Editor content changes
     editorContent.addEventListener('input', () => {
         saveNoteContent(editorContent.textContent);
+    });
+
+    // Editor content changes with debounce
+    const debouncedSave = debounce((content) => {
+        saveNoteContent(content);
+    }, 300); // Updates after 300ms of no typing
+
+    editorContent.addEventListener('input', (e) => {
+        debouncedSave(e.target.textContent);
+    });
+
+    editorTitle.addEventListener('input', (e) => {
+        if (activeNote) {
+            activeNote.title = e.target.textContent;
+            refreshNotesList();
+        }
     });
 }
 
@@ -196,7 +224,11 @@ function handleToolbarAction(e) {
 function saveNoteContent(content) {
     if (activeNote) {
         activeNote.content = content;
-        // Here you would typically implement auto-save to localStorage or backend
+        // Update the date to show it was modified
+        activeNote.date = new Date().toLocaleDateString();
+        // Refresh the notes list to show updated content
+        refreshNotesList();
+        // Here you would implememnt auto-save to localStorage or backend
     }
 }
 
@@ -210,6 +242,7 @@ function renderNotesList(notesToRender = notes) {
     noteList.innerHTML = notesToRender.map(note => `
         <li class="note-item ${note === activeNote ? 'active' : ''}">
             <div class="note-title">${note.title}</div>
+            <div class="note-preview">${note.content.substring(0, 50)}${note.content.length > 50 ? '...' : ''}</div>
             <div class="note-date">${note.date}</div>
         </li>
     `).join('');
