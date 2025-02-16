@@ -261,11 +261,14 @@ function renderFoldersList() {
 }
 
 function updateNoteTitle(event, noteId) {
-    const newTitle = event.target.textContent;
+    const newTitle = event.target.textContent.trim();
     const noteToUpdate = notes.find(note => note.id === parseInt(noteId));
-    if (noteToUpdate) {
+    if (noteToUpdate && newTitle) {
         noteToUpdate.title = newTitle;
         refreshNotesList(); // Refresh the list to reflect changes
+    } else {
+        // If title is empty, revert to original title
+        event.target.textContent = noteToUpdate.title;
     }
 }
 
