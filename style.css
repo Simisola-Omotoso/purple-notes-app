@@ -134,7 +134,7 @@ body {
 }
 
 /* Editor Section */
-.editor-section {
+.editor {
     padding: 20px;
     background-color: var(--dark-bg);
 }
