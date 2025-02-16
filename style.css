@@ -166,6 +166,9 @@ body {
     padding-top: 20px;
     font-size: 40px;
     margin-left: auto;
+    border: 2px solid var(primary-purple);
+    border-radius: 6px;
+    padding: 10px;
 }
 
 .toolbar {
