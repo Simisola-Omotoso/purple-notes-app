@@ -56,7 +56,7 @@ const toolbarButtons = document.querySelector('.toolbar-button');
 function initializeEventListeners() {
     // Folder selection
     folderList.addEventListener('click', (e) => {
-        const folderItem = e.target.closest('folder-item');
+        const folderItem = e.target.closest('.folder-item');
         if (folderItem) {
             setActiveFolder(folderItem);
         }
@@ -66,7 +66,7 @@ function initializeEventListeners() {
     noteList.addEventListener('click', (e) => {
         const noteItem = e.target.closest('note-item');
         if (noteItem) {
-            setActiveFolder(noteItem);
+            setActiveNote(noteItem);
         }
     });
 
