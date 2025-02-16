@@ -164,6 +164,11 @@ body {
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 4px;
+    align-items: center;
+}
+
+.toolbar-button i {
+    margin-right: 5px;
 }
 
 .toolbar-button:hover {
