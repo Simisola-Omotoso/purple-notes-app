@@ -1,5 +1,4 @@
 // Data structures to store notes & folders
-
 let folders = [
     { id: 1, name: 'Personal', active: true },
     { id: 2, name: 'Work', active: false },
@@ -7,6 +6,7 @@ let folders = [
     { id: 4, name: 'Archive', active: false },
 ];
 
+// Keep track of notes
 let notes = [
     {
         id: 1,
@@ -48,7 +48,7 @@ const editorTitle = document.querySelector('.editor-title');
 const editorContent = document.querySelector('.editor-content');
 const searchBar = document.querySelector('.search-bar');
 const addFolderBtn = document.querySelector('.sidebar-header');
-const addNoteBtn = document.querySelector('.notes-header');
+const addNoteBtn = document.querySelector('.notes-header .add-button'); // More specific selector
 const toolbarButtons = document.querySelector('.toolbar-button');
 
 // Event Listeners
@@ -64,7 +64,7 @@ function initializeEventListeners() {
 
     // Note selection
     noteList.addEventListener('click', (e) => {
-        const noteItem = e.target.closest('note-item');
+        const noteItem = e.target.closest('.note-item');
         if (noteItem) {
             setActiveNote(noteItem);
         }
@@ -156,8 +156,19 @@ function createNewNote() {
         date: new Date().toLocaleDateString(),
         folderId: activeFolder.id
     };
-    notes.push(newNote);
-    renderNotesList();
+
+    // Add new note to beginning of array
+    notes.unshift(newNote);
+
+    // Set as active note
+    activeNote = newNote;
+
+    // Update editor
+    editorTitle.textContent = newNote.title;
+    editorContent.textContent = newNote.content;
+
+    // Refresh the notes list to show the new note
+    refreshNotesList();
 }
 
 function handleToolbarAction(e) {
@@ -195,9 +206,9 @@ function refreshNotesList() {
     renderNotesList(folderNotes);
 }
 
-function renderNotesList(notesToRender) {
+function renderNotesList(notesToRender = notes) {
     noteList.innerHTML = notesToRender.map(note => `
-        <li class="note-item ${note.id === activeNote.id ? 'active' : ''}">
+        <li class="note-item ${note === activeNote ? 'active' : ''}">
             <div class="note-title">${note.title}</div>
             <div class="note-date">${note.date}</div>
         </li>
