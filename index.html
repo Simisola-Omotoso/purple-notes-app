@@ -9,32 +9,24 @@
         <!-- Sidebar Section -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>Folders</h2>
-                <button class="toolbar-button">+</button>
+                <h1>Folders</h1>
+                <button class="add-button">+</button>
             </div>
             <ul class="folder-list">
                 <li class="folder-item active">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z">
-                    </svg>
+                    <i class="far fa-folder"></i>
                     Personal
                 </li>
                 <li class="folder-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z">
-                    </svg>
+                    <i class="far fa-folder"></i>
                     Work
                 </li>
                 <li class="folder-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z">
-                    </svg>
+                    <i class="far fa-folder"></i>
                     Projects
                 </li>
                 <li class="folder-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z">
-                    </svg>
+                    <i class="far fa-folder"></i>
                     Archive
                 </li>
             </ul>
@@ -43,25 +35,25 @@
         <!-- Notes Section -->
         <div class="notes-section">
             <div class="notes-header">
-                <h2>Notes</h2>
-                <button class="toolbar-button">+</button>
+                <h1>Notes</h1>
+                <button class="add-button">+</button>
             </div>
             <input type="text" class="search-bar" placeholder="Search">
             <ul class="note-list">
-                <li class="note-item">
-                    <div>Meeting Notes</div>
+                <li class="note-item active">
+                    <div class="note-title">Meeting Notes</div>
                     <div class="note-date">2/15/2025</div>
                 </li>
                 <li class="note-item">
-                    <div>Project Ideas</div>
+                    <div class="note-title">Project Ideas</div>
                     <div class="note-date">2/15/2025</div>
                 </li>
                 <li class="note-item">
-                    <div>Shopping List</div>
+                    <div class="note-title">Shopping List</div>
                     <div class="note-date">2/15/2025</div>
                 </li>
                 <li class="note-item">
-                    <div>Travel Plans</div>
+                    <div class="note-title">Travel Plans</div>
                     <div class="note-date">2/15/2025</div>
                 </li>
             </ul>
@@ -69,24 +61,22 @@
 
         <!-- Editor Section -->
         <div class="editor-section">
-            <div class="editor-header">
-                <h1 class="editor-title">Meeting Notes</h1>
-                <div class="editor-toolbar">
-                    <button class="toolbar-button">
-                        <i class="fas fa-bold"></i>
-                    </button>
-                    <button class="toolbar-button">
-                        <i class="fas fa-italic"></i>
-                    </button>
-                    <button class="toolbar-button">
-                        <i class="fas fa-link"></i>
-                    </button>
-                    <button class="toolbar-button">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
+            <h1 class="editor-title">Meeting Notes</h1>
+            <div class="toolbar">
+                <button class="toolbar-button">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button class="toolbar-button">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button class="toolbar-button">
+                    <i class="fas fa-link"></i>
+                </button>
+                <button class="toolbar-button">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-            <div class="editor-content">
+            <div class="editor-content" contenteditable="true">
                 Today's meeting covered several key points...
             </div>
         </div>
