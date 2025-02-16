@@ -213,3 +213,9 @@ body {
 .editor-content:focus {
     border: 1px solid var(--primary-purple);
 }
+
+.footer {
+    text-align: center;
+    padding: 10px;
+    position: relative;
+}
