@@ -63,7 +63,6 @@ function initializeEventListeners() {
     });
 
     // Note selection
-
     noteList.addEventListener('click', (e) => {
         const noteItem = e.target.closest('note-item');
         if (noteItem) {
@@ -80,5 +79,34 @@ function initializeEventListeners() {
     addFolderBtn.addEventListener('click', createNewFolder);
 
     // Add new note
-    addFolderBtn.addEventListener('click', createNewFolder);
+    addNoteBtn.addEventListener('click', createNewNote);
+
+    // Toolbar buttons
+    toolbarButtons.forEach(button => {
+        button.addEventListener('click', handleToolbarAction);
+    });
+
+    // Editor content changes
+    editorContent.addEventListener('input', () => {
+        saveNoteContent(editorContent.textContent);
+    });
+}
+
+// Functions
+function setActiveFolder(folderElement) {
+    // Remove active class from all folders
+    document.querySelectorAll('.folder-item').forEach(folder => {
+        folder.classList.remove('active');
+    });
+
+    // Add active class to selected folder
+    folderElement.classList.add('active');
+
+    // Update folders data structure and refresh notes list
+    const folderName = folderElement.textContent.trim();
+    folders.forEach(folder => {
+        folder.active = folder.name === folderName;
+    });
+
+    refreshNotesList();
 }
