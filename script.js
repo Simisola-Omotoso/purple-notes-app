@@ -61,4 +61,24 @@ function initializeEventListeners() {
             setActiveFolder(folderItem);
         }
     });
+
+    // Note selection
+
+    noteList.addEventListener('click', (e) => {
+        const noteItem = e.target.closest('note-item');
+        if (noteItem) {
+            setActiveFolder(noteItem);
+        }
+    });
+
+    // Search functionality
+    searchBar.addEventListener('input', (e) => {
+        filterNotes(e.target.value);
+    });
+
+    // Add new folder
+    addFolderBtn.addEventListener('click', createNewFolder);
+
+    // Add new note
+    addFolderBtn.addEventListener('click', createNewFolder);
 }
