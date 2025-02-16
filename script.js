@@ -244,7 +244,7 @@ function refreshNotesList() {
 function renderNotesList(notesToRender = notes) {
     noteList.innerHTML = notesToRender.map(note => `
         <li class="note-item ${note === activeNote ? 'active' : ''}">
-            <div class="note-title">${note.title}</div>
+            <div class="note-title" contenteditable="true" onblur="updateNoteTitle(event, '${note.id}')">${note.title}</div>
             <div class="note-preview">${note.content.substring(0, 50)}${note.content.length > 50 ? '...' : ''}</div>
             <div class="note-date">${note.date}</div>
         </li>
@@ -258,6 +258,15 @@ function renderFoldersList() {
             ${folder.name}
         </li>
     `).join('');
+}
+
+function updateNoteTitle(event, noteId) {
+    const newTitle = event.target.textContent;
+    const noteToUpdate = notes.find(note => note.id === parseInt(noteId));
+    if (noteToUpdate) {
+        noteToUpdate.title = newTitle;
+        refreshNotesList(); // Refresh the list to reflect changes
+    }
 }
 
 // Initialize app
