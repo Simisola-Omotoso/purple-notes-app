@@ -227,11 +227,8 @@ function handleToolbarAction(e) {
 function saveNoteContent(content) {
     if (activeNote) {
         activeNote.content = content;
-        // Update the date to show it was modified
         activeNote.date = new Date().toLocaleDateString();
-        // Refresh the notes list to show updated content
         refreshNotesList();
-        // Here you would implememnt auto-save to localStorage or backend
     }
 }
 
@@ -265,9 +262,8 @@ function updateNoteTitle(event, noteId) {
     const noteToUpdate = notes.find(note => note.id === parseInt(noteId));
     if (noteToUpdate && newTitle) {
         noteToUpdate.title = newTitle;
-        refreshNotesList(); // Refresh the list to reflect changes
+        refreshNotesList();
     } else {
-        // If title is empty, revert to original title
         event.target.textContent = noteToUpdate.title;
     }
 }
