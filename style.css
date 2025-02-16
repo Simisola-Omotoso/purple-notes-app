@@ -57,6 +57,10 @@ body {
     display: block;
 }
 
+.add-button:hover {
+    opacity: 0.8;
+}
+
 .folder-list {
     list-style: none;
 }
