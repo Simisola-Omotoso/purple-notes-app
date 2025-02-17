@@ -144,6 +144,9 @@ folderManager.loadFolders();
 
 const noteManager = new NoteManager();
 noteManager.loadNotes();
+if (noteManager.notes.length > 0) {
+    editor.editorTitle.textContent = noteManager.notes[0].title;
+}
 
 const editor = new Editor(noteManager);
 
@@ -168,6 +171,7 @@ function initializeEventListeners() {
         const noteItem = e.target.closest('.note-item');
         if (noteItem) {
             noteManager.setActiveNote(Number(noteItem.dataset.id));
+            editor.editorTitle.textContent = noteManager.activeNote.title;
             renderNotesList(noteManager);
         }
     });
