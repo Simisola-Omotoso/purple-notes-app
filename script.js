@@ -100,7 +100,7 @@ function initializeEventListeners() {
     editorContent.addEventListener('input', (e) => {
         const content = e.target.textContent;
         contentHistory.push(content);
-        debouncedSave(content);
+        debouncedSave(e.target.textContent);
         localStorage.setItem('editorContent', editorContent.innerHTML);
         saveContentToServer(editorContent.innerHTML);
     });
@@ -110,7 +110,7 @@ function initializeEventListeners() {
     });
 
     editorContent.addEventListener('blur', () => {
-        localStorage.setItem('editorContent', editorContent.innerHTML);
+        saveContent(editorContent.innerHTML);
     });
 
     const debouncedSave = debounce((content) => {
@@ -244,6 +244,13 @@ function saveNoteContent(content) {
     }
 }
 
+function saveContent(content) {
+    localStorage.setItem('editorContent', content);
+    saveContentToServer(content);
+    saveContentToHistory(content);
+    lastSavedContent = content;
+}
+
 function saveContentToServer(content) {
     fetch('/api/saveContent', {
         method: 'POST',
@@ -262,8 +269,15 @@ function saveContentToServer(content) {
 }
 
 function saveContentToHistory(content) {
-    undoStack.push(content);
+    if (content !== lastSavedContent) {
+        undoStack.push(content);
+        redoStack.length = 0;
+    }
 }
+
+const debouncedSave = debounce((content) => {
+    saveContent(content);
+}, 300);
 
 function undo() {
     if (undoStack.length > 0) {
@@ -280,7 +294,7 @@ function redo() {
     if (redoStack.length > 0) {
         const redoContent = redoStack.pop();
         undoStack.push(editorContent.textContent);
-        editorContent.textContent = lastContent;
+        editorContent.textContent = redoContent;
         saveNoteContent(redoContent);
     } else {
         alert('No more actions to redo.');
