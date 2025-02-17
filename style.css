@@ -1,25 +1,22 @@
+/* ============================= */
+/*           VARIABLES           */
+/* ============================= */
 :root {
     --primary-purple: rgb(75, 9, 75);
     --light-purple: rgb(205, 126, 219);
     --text-white: rgb(255, 255, 255);
     --dark-bg: rgb(39, 39, 39);
-    --border-color: 575757;
+    --border-color: #575757;
 }
 
-@media (max-width: 768px) {
-    body {
-        grid-template-columns: 1fr;
-    }
-    .notes-section, .editor {
-        width: 100%;
-    }
-}
-
+/* ============================= */
+/*         GLOBAL STYLES         */
+/* ============================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Georgia", "serif";
+    font-family: "Georgia", serif;
 }
 
 body {
@@ -29,13 +26,25 @@ body {
     color: var(--text-white);
 }
 
-/* Sidebar Styles */
+/* ============================= */
+/*         UTILITY CLASSES       */
+/* ============================= */
+.hidden { display: none; }
+.flex { display: flex; }
+.flex-column { display: flex; flex-direction: column; }
+.centered { display: flex; justify-content: center; align-items: center; }
+.full-width { width: 100%; }
+.full-height { height: 100%; }
+.border-radius { border-radius: 6px; }
+.transition { transition: background-color 0.3s ease-in-out; }
 
+/* ============================= */
+/*         SIDEBAR STYLES        */
+/* ============================= */
 .sidebar {
     padding: 20px;
-    background-color: rgb(39, 39, 39);
-    border-right: 1px solid #575757;
-    height: 100%;
+    background-color: var(--dark-bg);
+    border-right: 1px solid var(--border-color);
     width: 15%;
 }
 
@@ -47,6 +56,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* Add Button */
 .add-button {
     color: var(--light-purple);
     font-size: 24px;
@@ -58,19 +68,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    line-height: 1;
 }
 
 .add-button::before {
     content: '+';
-    display: block;
 }
 
 .add-button:hover {
     opacity: 0.8;
 }
 
+/* Folder List */
 .folder-list {
     list-style: none;
 }
@@ -82,6 +90,7 @@ body {
     color: var(--text-white);
     cursor: pointer;
     border-radius: 6px;
+    transition: background-color 0.3s;
 }
 
 .folder-item.active {
@@ -91,17 +100,16 @@ body {
 
 .folder-item:hover {
     background-color: var(--light-purple);
-    transition: background-color 0.3s;
 }
 
-/* Notes Section Styles */
-
+/* ============================= */
+/*        NOTES SECTION          */
+/* ============================= */
 .notes-section {
     padding: 20px;
-    background-color: rgb(39, 39, 39);
-    border-right: 1px solid #575757;
+    background-color: var(--dark-bg);
+    border-right: 1px solid var(--border-color);
     width: 300px;
-    height: 100%;
 }
 
 .notes-header {
@@ -112,9 +120,10 @@ body {
     margin-bottom: 20px;
 }
 
+/* Search Bar */
 .search-bar {
     padding: 10px;
-    border: 1px solid #575757;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     width: 100%;
     margin-bottom: 20px;
@@ -131,6 +140,7 @@ body {
     border-color: var(--primary-purple);
 }
 
+/* Notes List */
 .note-list {
     list-style: none;
 }
@@ -142,6 +152,7 @@ body {
     margin-bottom: 10px;
     cursor: pointer;
     color: var(--text-white);
+    transition: background-color 0.3s;
 }
 
 .note-item.active {
@@ -150,7 +161,6 @@ body {
 
 .note-item:hover {
     background-color: var(--light-purple);
-    transition: background-color 0.3s;
 }
 
 .note-date {
@@ -159,31 +169,31 @@ body {
     margin-top: 5px;
 }
 
-/* Editor Section */
+/* ============================= */
+/*         EDITOR SECTION        */
+/* ============================= */
 .editor {
     padding: 20px;
     background-color: var(--dark-bg);
-    height: 100%;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
+/* Editor Title */
 .editor-title {
     color: var(--light-purple);
     margin-bottom: 20px;
     margin-top: 20px;
     width: 100%;
-    padding-top: 20px;
+    padding: 10px;
     font-size: 40px;
-    margin-left: auto;
     border: 2px solid var(--primary-purple);
     border-radius: 6px;
-    padding: 10px;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
+/* Toolbar */
 .toolbar {
     display: flex;
     gap: 10px;
@@ -199,17 +209,14 @@ body {
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 4px;
-    align-items: center;
-}
-
-.toolbar-button i {
-    margin-right: 5px;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .toolbar-button:hover {
     background-color: var(--primary-purple);
 }
 
+/* Editor Content */
 .editor-content {
     color: var(--text-white);
     line-height: 1.6;
@@ -222,9 +229,31 @@ body {
     flex-grow: 1;
 }
 
+/* ============================= */
+/*          FOOTER STYLES        */
+/* ============================= */
 .footer-link {
     text-align: center;
     margin-top: 10px;
     color: var(--light-purple);
     text-decoration: none;
+}
+
+/* ============================= */
+/*         RESPONSIVENESS        */
+/* ============================= */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .notes-section, .editor {
+        width: 100%;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-bottom: 1px solid var(--border-color);
+        border-right: none;
+    }
 }
