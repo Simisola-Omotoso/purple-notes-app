@@ -10,6 +10,9 @@ function debounce(func, wait) {
     };
 }
 
+let undoStack = [];
+let redoStack = [];
+
 let folders = [
     { id: 1, name: 'Personal', active: true },
     { id: 2, name: 'Work', active: false },
@@ -94,7 +97,7 @@ function initializeEventListeners() {
         button.addEventListener('click', handleToolbarAction);
     });
 
-    editorContent.addEventListener('input', () => {
+    editorContent.addEventListener('input', (e) => {
         const content = e.target.textContent;
         contentHistory.push(content);
         debouncedSave(content);
@@ -107,7 +110,7 @@ function initializeEventListeners() {
     });
 
     editorContent.addEventListener('blur', () => {
-        editorContent.classList.remove('focused');
+        localStorage.setItem('editorContent', editorContent.innerHTML);
     });
 
     const debouncedSave = debounce((content) => {
@@ -172,6 +175,7 @@ function createNewFolder() {
         };
         folders.push(newFolder);
         renderFoldersList();
+        setActiveFolder(newFolder);
     }
 }
 
@@ -256,6 +260,46 @@ function saveContentToServer(content) {
         console.error('Error:', error);
     });
 }
+
+function saveContentToHistory(content) {
+    undoStack.push(content);
+}
+
+function undo() {
+    if (undoStack.length > 0) {
+        const lastContent = undoStack.pop();
+        redoStack.push(editorContent.textContent);
+        editorContent.textContent = lastContent;
+        saveNoteContent(lastContent);
+    } else {
+        alert('No more actions to undo.');
+    }
+}
+
+function redo() {
+    if (redoStack.length > 0) {
+        const redoContent = redoStack.pop();
+        undoStack.push(editorContent.textContent);
+        editorContent.textContent = lastContent;
+        saveNoteContent(redoContent);
+    } else {
+        alert('No more actions to redo.');
+    }
+}
+
+toolbarButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const command = button.textContent.trim();
+        switch (command) {
+            case '↩':
+                undo();
+                break;
+            case '↪':
+                redo();
+                break;
+        }
+    })
+});
 
 function refreshNotesList() {
     const activeFolder = folders.find(folder => folder.active);
