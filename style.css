@@ -204,7 +204,7 @@ body {
 .editor-content {
     color: var(--text-white);
     line-height: 1.6;
-    min-height: 500px;
+    min-height: 800px;
     padding: 20px;
     outline: none;
     width: 100%;
