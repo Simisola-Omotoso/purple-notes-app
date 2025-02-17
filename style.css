@@ -170,7 +170,7 @@ body {
     padding-top: 20px;
     font-size: 40px;
     margin-left: auto;
-    border: 2px solid var(primary-purple);
+    border: 2px solid var(--primary-purple);
     border-radius: 6px;
     padding: 10px;
 }
@@ -208,12 +208,6 @@ body {
     padding: 20px;
     outline: none;
     width: 100%;
-}
-
-.editor-content.focused {
     background-color: rgba(255, 255, 255, 0.05);
-}
-
-.editor-content:focus {
     border: 1px solid var(--primary-purple);
 }
