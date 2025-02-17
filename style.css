@@ -173,6 +173,7 @@ body {
     border: 2px solid var(--primary-purple);
     border-radius: 6px;
     padding: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .toolbar {
