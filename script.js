@@ -60,6 +60,13 @@ const addFolderBtn = document.querySelector('.sidebar-header');
 const addNoteBtn = document.querySelector('.notes-header .add-button'); // More specific selector
 const toolbarButtons = document.querySelectorAll('.toolbar-button');
 
+window.onload = () => {
+    const savedContent = localStorage.getItem('editorContent');
+    if (savedContent) {
+        editorContent.innerHTML = savedContent;
+    }
+};
+
 function initializeEventListeners() {
     folderList.addEventListener('click', (e) => {
         const folderItem = e.target.closest('.folder-item');
@@ -87,10 +94,12 @@ function initializeEventListeners() {
         button.addEventListener('click', handleToolbarAction);
     });
 
-    editorContent.addEventListener('input', (e) => {
+    editorContent.addEventListener('input', () => {
         const content = e.target.textContent;
         contentHistory.push(content);
         debouncedSave(content);
+        localStorage.setItem('editorContent', editorContent.innerHTML);
+        saveContentToServer(editorContent.innerHTML);
     });
 
     editorContent.addEventListener('focus', () => {
@@ -231,6 +240,23 @@ function saveNoteContent(content) {
     }
 }
 
+function saveContentToServer(content) {
+    fetch('/api/saveContent', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
 function refreshNotesList() {
     const activeFolder = folders.find(folder => folder.active);
     const folderNotes = notes.filter(note => note.folderId === activeFolder.id);
@@ -313,6 +339,11 @@ toolbarButtons.forEach(button => {
         }
     })
 })
+
+setInterval(() => {
+    const content = editorContent.innerHTML;
+    localStorage.setItem('editorContent', content);
+}, 5000);
 
 function initializeApp() {
     renderFoldersList();
