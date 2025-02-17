@@ -220,4 +220,6 @@ body {
 .footer-link {
     text-align: center;
     margin-top: 10px;
+    color: var(--light-purple);
+    text-decoration: none;
 }
