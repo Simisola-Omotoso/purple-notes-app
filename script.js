@@ -102,14 +102,40 @@ class Editor {
     initializeToolbarListeners() {
         document.querySelector('.toolbar-button.bold').addEventListener('click', () => {
             document.execCommand('bold');
+            this.editorContent.focus(); // Focus back to the editor
         });
 
         document.querySelector('.toolbar-button.italic').addEventListener('click', () => {
             document.execCommand('italic');
+            this.editorContent.focus(); // Focus back to the editor
         });
 
         document.querySelector('.toolbar-button.underline').addEventListener('click', () => {
             document.execCommand('underline');
+            this.editorContent.focus(); // Focus back to the editor
+        });
+
+        document.querySelector('.toolbar-button.strike').addEventListener('click', () => {
+            document.execCommand('strikeThrough');
+            this.editorContent.focus(); // Focus back to the editor
+        });
+
+        document.querySelector('.toolbar-button.insert-link').addEventListener('click', () => {
+            const url = prompt('Enter the link URL:');
+            if (url) {
+                document.execCommand('createLink', false, url);
+                this.editorContent.focus(); // Focus back to the editor
+            }
+        });
+
+        document.querySelector('.toolbar-button.unordered-list').addEventListener('click', () => {
+            document.execCommand('insertUnorderedList');
+            this.editorContent.focus(); // Focus back to the editor
+        });
+
+        document.querySelector('.toolbar-button.ordered-list').addEventListener('click', () => {
+            document.execCommand('insertOrderedList');
+            this.editorContent.focus(); // Focus back to the editor
         });
     }
 
