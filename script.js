@@ -178,6 +178,7 @@ function initializeEventListeners() {
     });
 
     document.querySelector('.sidebar-header').addEventListener('click', () => {
+        console.log('Add folder button clicked');
         const folderName = prompt('Enter folder name:');
         if (folderName) {
             folderManager.createFolder(folderName);
