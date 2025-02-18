@@ -1,84 +1,6 @@
-let isDragging = false;
-let lastDownX = 0;
+// ... existing code ...
 
-const sidebarDivider = document.getElementById('sidebar-divider');
-const notesDivider = document.getElementById('notes-divider');
-
-sidebarDivider.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    lastDownX = e.clientX;
-});
-
-notesDivider.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    lastDownX = e.clientX;
-});
-
-document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-
-    const dx = e.clientX - lastDownX;
-
-    const sidebar = document.querySelector('.sidebar');
-    const notesSection = document.querySelector('.notes-section');
-    const editor = document.querySelector('.editor');
-
-    if (e.target === sidebarDivider) {
-        sidebar.style.width = `${sidebar.offsetWidth + dx}px`;
-        notesSection.style.width = `${notesSection.offsetWidth - dx}px`;
-    } else if (e.target === notesDivider) {
-        notesSection.style.width = `${notesSection.offsetWidth + dx}px`;
-        editor.style.width = `${editor.offsetWidth - dx}px`;
-    }
-
-    lastDownX = e.clientX;
-});
-
-document.addEventListener('mouseup', () => {
-    isDragging = false;
-});
-class NoteManager {
-    constructor() {
-        this.notes = [];
-        this.activeNote = null;
-    }
-
-    loadNotes() {
-        const savedNotes = JSON.parse(localStorage.getItem('notes'));
-        if (savedNotes) {
-            this.notes = savedNotes;
-        }
-    }
-
-    saveNotes() {
-        localStorage.setItem('notes', JSON.stringify(this.notes));
-    }
-
-    createNewNote(folderId) {
-        const newNote = { id: Date.now(), title: 'New Note', content: '', date: new Date().toLocaleDateString(), folderId };
-        this.notes.push(newNote);
-        this.saveNotes(); // Save after creating a new note
-        return newNote;
-    }
-
-    setActiveNote(id) {
-        this.activeNote = this.notes.find(note => note.id === id);
-        this.saveNotes(); // Save after setting active note
-    }
-
-    updateNoteContent(content) {
-        if (this.activeNote) {
-            this.activeNote.content = content;
-            this.activeNote.date = new Date().toLocaleDateString();
-            this.saveNotes(); // Save after updating note content
-        }
-    }
-
-    getNotesByFolder(folderId) {
-        return this.notes.filter(note => note.folderId === folderId);
-    }
-}
-
+// FolderManager Class
 class FolderManager {
     constructor() {
         this.folders = [];
@@ -113,26 +35,62 @@ class FolderManager {
     }
 }
 
+// NoteManager Class
+class NoteManager {
+    constructor() {
+        this.notes = [];
+        this.activeNote = null;
+    }
+
+    loadNotes() {
+        const savedNotes = JSON.parse(localStorage.getItem('notes'));
+        if (savedNotes) {
+            this.notes = savedNotes;
+        }
+    }
+
+    saveNotes() {
+        localStorage.setItem('notes', JSON.stringify(this.notes));
+    }
+
+    createNewNote(folderId) {
+        const newNote = { id: Date.now(), title: 'New Note', content: '', date: new Date().toLocaleDateString(), folderId };
+        this.notes.push(newNote);
+        this.saveNotes(); // Save after creating a new note
+        return newNote;
+    }
+
+    setActiveNote(id) {
+        this.activeNote = this.notes.find(note => note.id === id);
+        this.saveNotes(); // Save after setting active note
+    }
+
+    getNotesByFolder(folderId) {
+        return this.notes.filter(note => note.folderId === folderId);
+    }
+}
+
+// Editor Class
 class Editor {
     constructor(noteManager) {
         this.noteManager = noteManager;
         this.editorTitle = document.querySelector('.editor-title');
         this.editorContent = document.querySelector('.editor-content');
         this.initializeEventListeners();
-        this.initializeToolbarListeners(); // Ensure this is called
+        this.initializeToolbarListeners();
     }
 
     initializeEventListeners() {
         this.editorTitle.addEventListener('input', (e) => {
             if (this.noteManager.activeNote) {
                 this.noteManager.activeNote.title = e.target.textContent.trim();
-                this.noteManager.saveNotes(); // Save after updating note title
+                this.noteManager.saveNotes(); // Save after title change
             }
         });
 
         this.editorContent.addEventListener('input', debounce((e) => {
-            this.noteManager.activeNote.content = e.target.innerHTML;
-            this.noteManager.saveNotes();
+            this.noteManager.activeNote.content = e.target.innerHTML; // Save content
+            this.noteManager.saveNotes(); // Save after content change
         }, 300));
     }
 
@@ -175,23 +133,25 @@ class Editor {
             this.editorContent.focus(); // Focus back to the editor
         });
     }
-
-    saveContent(content) {
-        this.noteManager.updateNoteContent(content);
-        localStorage.setItem('editorContent', content);
-    }
 }
 
-// Utility function for debouncing input events
-function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
-}
+// Initialize Managers and Editor
+const folderManager = new FolderManager();
+folderManager.loadFolders();
 
-// Rendering Functions
+const noteManager = new NoteManager();
+noteManager.loadNotes();
+
+const editor = new Editor(noteManager);
+
+// Event Listeners for Folders and Notes
+document.addEventListener('DOMContentLoaded', () => {
+    renderFoldersList(folderManager);
+    renderNotesList(noteManager);
+    initializeEventListeners();
+});
+
+// Function to render folders
 function renderFoldersList(folderManager) {
     const folderList = document.querySelector('.folder-list');
     folderList.innerHTML = folderManager.folders.map(folder => `
@@ -201,6 +161,7 @@ function renderFoldersList(folderManager) {
     `).join('');
 }
 
+// Function to render notes
 function renderNotesList(noteManager) {
     const noteList = document.querySelector('.note-list');
     const activeFolder = folderManager.getActiveFolder();
@@ -214,65 +175,57 @@ function renderNotesList(noteManager) {
     `).join('');
 }
 
-// App Initialization
-const folderManager = new FolderManager();
-folderManager.loadFolders();
+// Adjustable Dividers
+let isDragging = false;
+let lastDownX = 0;
 
-const noteManager = new NoteManager();
-noteManager.loadNotes();
+const sidebarDivider = document.getElementById('sidebar-divider');
+const notesDivider = document.getElementById('notes-divider');
 
-const editor = new Editor(noteManager); // Ensure this is created after noteManager
+const sidebar = document.querySelector('.sidebar');
+const notesSection = document.querySelector('.notes-section');
+const editorSection = document.querySelector('.editor');
 
-document.addEventListener('DOMContentLoaded', () => {
-    folderManager.loadFolders();
-    noteManager.loadNotes();
-    renderFoldersList(folderManager);
-    renderNotesList(noteManager);
-    initializeEventListeners(); // Ensure this is called after rendering
+sidebarDivider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    lastDownX = e.clientX;
 });
 
-// Event Listeners
-function initializeEventListeners() {
-    document.querySelector('.folder-list').addEventListener('click', (e) => {
-        const folderItem = e.target.closest('.folder-item');
-        if (folderItem) {
-            const folderId = Number(folderItem.dataset.id);
-            folderManager.setActiveFolder(folderId);
-            renderFoldersList(folderManager);
-            renderNotesList(noteManager); // Render notes for the active folder
-        }
-    });
+notesDivider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    lastDownX = e.clientX;
+});
 
-    document.querySelector('.note-list').addEventListener('click', (e) => {
-        const noteItem = e.target.closest('.note-item');
-        if (noteItem) {
-            const noteId = Number(noteItem.dataset.id);
-            noteManager.setActiveNote(noteId);
-            updateEditor(noteManager.activeNote); // Update the editor with the active note's content
-            renderNotesList(noteManager); // Highlight the active note
-        }
-    });
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
 
-    document.querySelector('.add-folder').addEventListener('click', () => {
-        const folderName = prompt('Enter folder name:');
-        if (folderName) {
-            folderManager.createFolder(folderName);
-            renderFoldersList(folderManager);
-        }
-    });
+    const dx = e.clientX - lastDownX;
 
-    document.querySelector('.add-note').addEventListener('click', () => {
-        const activeFolder = folderManager.getActiveFolder();
-        if (activeFolder) {
-            const newNote = noteManager.createNewNote(activeFolder.id);
-            renderNotesList(noteManager);
-            updateEditor(newNote); // Update the editor with the new note's content
-        }
-    });
-}
+    if (e.target === sidebarDivider) {
+        const newSidebarWidth = sidebar.offsetWidth + dx;
+        const newNotesWidth = notesSection.offsetWidth - dx;
 
-// Function to update the editor with the active note's content
-function updateEditor(note) {
-    document.querySelector('.editor-title').textContent = note.title;
-    document.querySelector('.editor-content').innerHTML = note.content; // Use innerHTML to preserve formatting
-}
+        // Check for minimum widths
+        if (newSidebarWidth >= 100 && newNotesWidth >= 100) {
+            sidebar.style.width = `${newSidebarWidth}px`;
+            notesSection.style.width = `${newNotesWidth}px`;
+        }
+    } else if (e.target === notesDivider) {
+        const newNotesWidth = notesSection.offsetWidth + dx;
+        const newEditorWidth = editorSection.offsetWidth - dx;
+
+        // Check for minimum widths
+        if (newNotesWidth >= 100 && newEditorWidth >= 200) {
+            notesSection.style.width = `${newNotesWidth}px`;
+            editorSection.style.width = `${newEditorWidth}px`;
+        }
+    }
+
+    lastDownX = e.clientX;
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false; // Stop dragging
+});
+
+// ... existing code ...

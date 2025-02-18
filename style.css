@@ -264,4 +264,5 @@ body {
     cursor: ew-resize;
     height: 100%;
     position: relative;
+    z-index: 10;
 }
