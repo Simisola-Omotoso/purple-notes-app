@@ -59,6 +59,7 @@ class NoteManager {
     }
 
     setActiveNote(noteId) {
+        renderNotesList(noteManager);
         this.activeNote = this.notes.find(note => note.id === noteId);
         this.saveNotes(); // Save after setting active note
     }
@@ -158,9 +159,9 @@ function initializeEventListeners() {
         const folderItem = e.target.closest('.folder-item');
         if (folderItem) {
             const folderId = Number(folderItem.dataset.id);
-            folderManager.setActiveFolder(folderId); // Set the active folder
-            renderFoldersList(folderManager); // Render folders
-            renderNotesList(noteManager); // Render notes for the active folder
+            folderManager.setActiveFolder(folderId);
+            renderNotesList(noteManager);
+            renderFoldersList(folderManager);
         }
     });
 
@@ -193,7 +194,7 @@ function renderNotesList(noteManager) {
     const filteredNotes = noteManager.getNotesByFolder(activeFolder?.id);
     
     noteList.innerHTML = filteredNotes.map(note => `
-        <li class="note-item ${note === noteManager.activeNote ? 'active' : ''}" data-id="${note.id}">
+        <li class="note-item ${note.id === noteManager.activeNote?.id ? 'active' : ''}" data-id="${note.id}">
             <div class="note-title">${note.title}</div>
             <div class="note-date">${note.date}</div>
         </li>
