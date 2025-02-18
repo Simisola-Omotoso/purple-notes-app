@@ -23,8 +23,8 @@ class FolderManager {
     }
 
     setActiveFolder(folderId) {
-        this.folders.forEach(folder => folder.active = folder.id === id);
-        this.activeFolder = this.folders.find(folder => folder.id === id);
+        this.folders.forEach(folder => folder.active = folder.id === folderId);
+        this.activeFolder = this.folders.find(folder => folder.id === folderId);
         this.saveFolders(); // Save after setting active folder
     }
 
@@ -59,7 +59,7 @@ class NoteManager {
     }
 
     setActiveNote(noteId) {
-        this.activeNote = this.notes.find(note => note.id === id);
+        this.activeNote = this.notes.find(note => note.id === noteId);
         this.saveNotes(); // Save after setting active note
     }
 
