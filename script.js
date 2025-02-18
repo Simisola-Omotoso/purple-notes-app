@@ -144,10 +144,38 @@ const editor = new Editor(noteManager);
 
 // Event Listeners for Folders and Notes
 document.addEventListener('DOMContentLoaded', () => {
+    folderManager.loadFolders(); // Load folders from localStorage
+    noteManager.loadNotes(); // Load notes from localStorage
     renderFoldersList(folderManager);
     renderNotesList(noteManager);
-    initializeEventListeners();
+    initializeEventListeners(); // Ensure this is called after rendering
 });
+
+// Function to initialize event listeners for folders and notes
+function initializeEventListeners() {
+    // Event listener for folder clicks
+    document.querySelector('.folder-list').addEventListener('click', (e) => {
+        const folderItem = e.target.closest('.folder-item');
+        if (folderItem) {
+            const folderId = Number(folderItem.dataset.id);
+            folderManager.setActiveFolder(folderId); // Set the active folder
+            renderFoldersList(folderManager); // Render folders
+            renderNotesList(noteManager); // Render notes for the active folder
+        }
+    });
+
+    // Event listener for note clicks
+    document.querySelector('.note-list').addEventListener('click', (e) => {
+        const noteItem = e.target.closest('.note-item');
+        if (noteItem) {
+            const noteId = Number(noteItem.dataset.id);
+            noteManager.setActiveNote(noteId); // Set the active note
+            editor.editorTitle.textContent = noteManager.activeNote.title; // Update editor title
+            editor.editorContent.innerHTML = noteManager.activeNote.content; // Update editor content
+            renderNotesList(noteManager); // Render notes
+        }
+    });
+}
 
 // Function to render folders
 function renderFoldersList(folderManager) {
