@@ -44,6 +44,7 @@ class NoteManager {
         const savedNotes = JSON.parse(localStorage.getItem('notes'));
         if (savedNotes) {
             this.notes = savedNotes;
+            this.activeNote = this.notes.find(n => n.id === Number(localStorage.getItem('activeNoteId')));
         }
     }
 
@@ -59,9 +60,10 @@ class NoteManager {
     }
 
     setActiveNote(noteId) {
-        renderNotesList(noteManager);
         this.activeNote = this.notes.find(note => note.id === noteId);
-        this.saveNotes(); // Save after setting active note
+        localStorage.setItem('activeNoteId', noteId);
+        this.saveNotes();
+        renderNotesList(noteManager);
     }
 
     getNotesByFolder(folderId) {
@@ -160,8 +162,12 @@ function initializeEventListeners() {
         if (folderItem) {
             const folderId = Number(folderItem.dataset.id);
             folderManager.setActiveFolder(folderId);
-            renderNotesList(noteManager);
             renderFoldersList(folderManager);
+            renderNotesList(noteManager);
+
+            editor.editorTitle.textContent = '';
+            editor.editorContent.innerHTML = '';
+            noteManager.activeNote = null;
         }
     });
 
@@ -190,7 +196,7 @@ function renderFoldersList(folderManager) {
 // Function to render notes
 function renderNotesList(noteManager) {
     const noteList = document.querySelector('.note-list');
-    const activeFolder = folderManager.getActiveFolder();
+    const activeFolder = folderManager.folders.find(folder => folder.active);
     const filteredNotes = noteManager.getNotesByFolder(activeFolder?.id);
     
     noteList.innerHTML = filteredNotes.map(note => `
