@@ -172,6 +172,7 @@ function initializeEventListeners() {
         if (noteItem) {
             noteManager.setActiveNote(Number(noteItem.dataset.id));
             editor.editorTitle.textContent = noteManager.activeNote.title;
+            editor.editorContent.textContent = noteManager.activeNote.content; // Set the content in the editor
             renderNotesList(noteManager);
         }
     });
