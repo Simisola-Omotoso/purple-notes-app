@@ -66,7 +66,6 @@ class FolderManager {
         };
         this.folders.push(newFolder);
         this.setActiveFolder(newFolder.id);
-        renderFoldersList(this);
     }
 
     setActiveFolder(folderId) {
@@ -163,11 +162,12 @@ function initializeEventListeners() {
     document.querySelector('.folder-list').addEventListener('click', (e) => {
         const folderItem = e.target.closest('.folder-item');
         if (folderItem) {
+            const folderId = Number(folderItem.dataset.id);
             folderManager.setActiveFolder(Number(folderItem.dataset.id));
             renderFoldersList(folderManager);
             renderNotesList(noteManager);
 
-            const activeFolderNotes = noteManager.getNotesByFolder(folderManager.getActiveFolder()?.id);
+            const activeFolderNotes = noteManager.getNotesByFolder(folderId);
             if (activeFolderNotes.length > 0) {
                 noteManager.setActiveNote(activeFolderNotes[0].id);
                 updateEditor(noteManager.activeNote);
@@ -180,7 +180,8 @@ function initializeEventListeners() {
     document.querySelector('.note-list').addEventListener('click', (e) => {
         const noteItem = e.target.closest('.note-item');
         if (noteItem) {
-            noteManager.setActiveNote(Number(noteItem.dataset.id));
+            const noteId = Number(noteItem.dataset.id);
+            noteManager.setActiveNote(noteId);
             updateEditor(noteManager.activeNote);
             renderNotesList(noteManager);
         }
