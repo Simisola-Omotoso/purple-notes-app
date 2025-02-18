@@ -22,7 +22,7 @@ class FolderManager {
         this.saveFolders(); // Save after creating a new folder
     }
 
-    setActiveFolder(id) {
+    setActiveFolder(folderId) {
         this.folders.forEach(folder => folder.active = folder.id === id);
         this.activeFolder = this.folders.find(folder => folder.id === id);
         this.saveFolders(); // Save after setting active folder
@@ -58,7 +58,7 @@ class NoteManager {
         return newNote;
     }
 
-    setActiveNote(id) {
+    setActiveNote(noteId) {
         this.activeNote = this.notes.find(note => note.id === id);
         this.saveNotes(); // Save after setting active note
     }
@@ -172,7 +172,6 @@ function initializeEventListeners() {
             noteManager.setActiveNote(noteId); // Set the active note
             editor.editorTitle.textContent = noteManager.activeNote.title; // Update editor title
             editor.editorContent.innerHTML = noteManager.activeNote.content; // Update editor content
-            renderNotesList(noteManager); // Render notes
         }
     });
 }
