@@ -157,16 +157,13 @@ folderManager.loadFolders();
 
 const noteManager = new NoteManager();
 noteManager.loadNotes();
-if (noteManager.notes.length > 0) {
-    editor.editorTitle.textContent = noteManager.notes[0].title;
-}
 
-const editor = new Editor(noteManager);
+const editor = new Editor(noteManager); // Ensure this is created after noteManager
 
 document.addEventListener('DOMContentLoaded', () => {
     renderFoldersList(folderManager);
     renderNotesList(noteManager);
-    initializeEventListeners();
+    initializeEventListeners(); // Ensure this is called after rendering
 });
 
 // Event Listeners
@@ -177,7 +174,7 @@ function initializeEventListeners() {
             const folderId = Number(folderItem.dataset.id);
             folderManager.setActiveFolder(folderId);
             renderFoldersList(folderManager);
-            renderNotesList(noteManager);
+            renderNotesList(noteManager); // Render notes for the active folder
         }
     });
 
@@ -186,8 +183,8 @@ function initializeEventListeners() {
         if (noteItem) {
             const noteId = Number(noteItem.dataset.id);
             noteManager.setActiveNote(noteId);
-            updateEditor(noteManager.activeNote);
-            renderNotesList(noteManager);
+            updateEditor(noteManager.activeNote); // Update the editor with the active note's content
+            renderNotesList(noteManager); // Highlight the active note
         }
     });
 
@@ -204,12 +201,13 @@ function initializeEventListeners() {
         if (activeFolder) {
             const newNote = noteManager.createNewNote(activeFolder.id);
             renderNotesList(noteManager);
-            updateEditor(newNote);
+            updateEditor(newNote); // Update the editor with the new note's content
         }
     });
 }
 
+// Function to update the editor with the active note's content
 function updateEditor(note) {
     document.querySelector('.editor-title').textContent = note.title;
-    document.querySelector('.editor-content').innerHTML = note.content;
+    document.querySelector('.editor-content').innerHTML = note.content; // Use innerHTML to preserve formatting
 }
