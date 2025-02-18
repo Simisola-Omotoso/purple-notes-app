@@ -230,7 +230,9 @@ document.querySelector('.add-note').addEventListener('click', () => {
 
 // Adjustable Dividers
 let isDragging = false;
-let lastDownX = 0;
+let activeDivider = null;
+let startX = 0;
+let startWidths = {};
 
 const sidebarDivider = document.getElementById('sidebar-divider');
 const notesDivider = document.getElementById('notes-divider');
@@ -239,48 +241,72 @@ const sidebar = document.querySelector('.sidebar');
 const notesSection = document.querySelector('.notes-section');
 const editorSection = document.querySelector('.editor');
 
-sidebarDivider.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    lastDownX = e.clientX;
-});
+const minWidths = { sidebar: 150, notes: 150, editor: 250 };
 
-notesDivider.addEventListener('mousedown', (e) => {
+function startDrag(e, divider) {
     isDragging = true;
-    lastDownX = e.clientX;
-});
+    activeDivider = divider;
+    startX = e.clientX;
+    startWidths = {
+        sidebar: sidebar.offsetWidth,
+        notes: notesSection.offsetWidth,
+        editor: editorSection.offsetWidth
+    };
+    document.body.style.userSelect = 'none'; // Prevent text selection
+}
 
-document.addEventListener('mousemove', (e) => {
+function onDrag(e) {
     if (!isDragging) return;
+    
+    requestAnimationFrame(() => {
+        const dx = e.clientX - startX;
 
-    const dx = e.clientX - lastDownX;
+        if (activeDivider === sidebarDivider) {
+            const newSidebarWidth = Math.max(minWidths.sidebar, startWidths.sidebar + dx);
+            const newNotesWidth = Math.max(minWidths.notes, startWidths.notes - dx);
 
-    if (e.target === sidebarDivider) {
-        const newSidebarWidth = sidebar.offsetWidth + dx;
-        const newNotesWidth = notesSection.offsetWidth - dx;
-
-        // Check for minimum widths
-        if (newSidebarWidth >= 100 && newNotesWidth >= 100) {
             sidebar.style.width = `${newSidebarWidth}px`;
             notesSection.style.width = `${newNotesWidth}px`;
-        }
-    } else if (e.target === notesDivider) {
-        const newNotesWidth = notesSection.offsetWidth + dx;
-        const newEditorWidth = editorSection.offsetWidth - dx;
 
-        // Check for minimum widths
-        if (newNotesWidth >= 100 && newEditorWidth >= 200) {
+            localStorage.setItem('sidebarWidth', newSidebarWidth);
+            localStorage.setItem('notesWidth', newNotesWidth);
+        } else if (activeDivider === notesDivider) {
+            const newNotesWidth = Math.max(minWidths.notes, startWidths.notes + dx);
+            const newEditorWidth = Math.max(minWidths.editor, startWidths.editor - dx);
+
             notesSection.style.width = `${newNotesWidth}px`;
             editorSection.style.width = `${newEditorWidth}px`;
+
+            localStorage.setItem('notesWidth', newNotesWidth);
+            localStorage.setItem('editorWidth', newEditorWidth);
         }
-    }
+    });
+}
 
-    lastDownX = e.clientX;
+function stopDrag() {
+    isDragging = false;
+    document.body.style.userSelect = ''; // Restore text selection
+}
+
+// Attach event listeners
+sidebarDivider.addEventListener('mousedown', (e) => startDrag(e, sidebarDivider));
+notesDivider.addEventListener('mousedown', (e) => startDrag(e, notesDivider));
+
+document.addEventListener('mousemove', onDrag);
+document.addEventListener('mouseup', stopDrag);
+
+// Load saved widths
+window.addEventListener('load', () => {
+    const savedSidebarWidth = localStorage.getItem('sidebarWidth');
+    const savedNotesWidth = localStorage.getItem('notesWidth');
+    const savedEditorWidth = localStorage.getItem('editorWidth');
+
+    if (savedSidebarWidth) sidebar.style.width = `${savedSidebarWidth}px`;
+    if (savedNotesWidth) notesSection.style.width = `${savedNotesWidth}px`;
+    if (savedEditorWidth) editorSection.style.width = `${savedEditorWidth}px`;
 });
 
-document.addEventListener('mouseup', () => {
-    isDragging = false; // Stop dragging
-});
-
+// Debounce
 function debounce(func, wait) {
     let timeout;
     return function(...args) {
