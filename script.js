@@ -133,7 +133,6 @@ function renderNotesList(noteManager) {
     noteList.innerHTML = filteredNotes.map(note => `
         <li class="note-item ${note === noteManager.activeNote ? 'active' : ''}" data-id="${note.id}">
             <div class="note-title">${note.title}</div>
-            <div class="note-preview">${note.content.substring(0, 50)}${note.content.length > 50 ? '...' : ''}</div>
             <div class="note-date">${note.date}</div>
         </li>
     `).join('');
@@ -192,7 +191,6 @@ function initializeEventListeners() {
         if (folderName) {
             folderManager.createFolder(folderName);
             renderFoldersList(folderManager);
-            renderNotesList(noteManager);
         }
     });
 
@@ -201,10 +199,8 @@ function initializeEventListeners() {
         if (activeFolder) {
             const newNote = noteManager.createNewNote(activeFolder.id);
             renderNotesList(noteManager);
-            updateEditor(newNote);
-        } else {
-            alert('Please select a folder first.');
-        }
+            editor.editorTitle.textContent = newNote.title;
+            editor.editorContent.textContent = newNote.content;
     });
 }
 
