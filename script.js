@@ -1,3 +1,42 @@
+let isDragging = false;
+let lastDownX = 0;
+
+const sidebarDivider = document.getElementById('sidebar-divider');
+const notesDivider = document.getElementById('notes-divider');
+
+sidebarDivider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    lastDownX = e.clientX;
+});
+
+notesDivider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    lastDownX = e.clientX;
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const dx = e.clientX - lastDownX;
+
+    const sidebar = document.querySelector('.sidebar');
+    const notesSection = document.querySelector('.notes-section');
+    const editor = document.querySelector('.editor');
+
+    if (e.target === sidebarDivider) {
+        sidebar.style.width = `${sidebar.offsetWidth + dx}px`;
+        notesSection.style.width = `${notesSection.offsetWidth - dx}px`;
+    } else if (e.target === notesDivider) {
+        notesSection.style.width = `${notesSection.offsetWidth + dx}px`;
+        editor.style.width = `${editor.offsetWidth - dx}px`;
+    }
+
+    lastDownX = e.clientX;
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
 class NoteManager {
     constructor() {
         this.notes = [];

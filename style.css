@@ -257,3 +257,11 @@ body {
         border-right: none;
     }
 }
+
+.divider {
+    width: 5px;
+    background-color: #ccc;
+    cursor: ew-resize;
+    height: 100%;
+    position: relative;
+}
