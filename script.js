@@ -175,6 +175,25 @@ function renderNotesList(noteManager) {
     `).join('');
 }
 
+// Event Listeners for Adding Folders and Notes
+document.querySelector('.add-folder').addEventListener('click', () => {
+    const folderName = prompt('Enter folder name:');
+    if (folderName) {
+        folderManager.createFolder(folderName);
+        renderFoldersList(folderManager);
+    }
+});
+
+document.querySelector('.add-note').addEventListener('click', () => {
+    const activeFolder = folderManager.getActiveFolder();
+    if (activeFolder) {
+        const newNote = noteManager.createNewNote(activeFolder.id);
+        renderNotesList(noteManager);
+        editor.editorTitle.textContent = newNote.title; // Set the title in the editor
+        editor.editorContent.innerHTML = newNote.content; // Set the content in the editor
+    }
+});
+
 // Adjustable Dividers
 let isDragging = false;
 let lastDownX = 0;
@@ -227,5 +246,4 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('mouseup', () => {
     isDragging = false; // Stop dragging
 });
-
 // ... existing code ...
