@@ -172,7 +172,7 @@ function initializeEventListeners() {
         if (noteItem) {
             noteManager.setActiveNote(Number(noteItem.dataset.id));
             editor.editorTitle.textContent = noteManager.activeNote.title;
-            editor.editorContent.textContent = noteManager.activeNote.content; // Set the content in the editor
+            editor.editorContent.textContent = noteManager.activeNote.content;
             renderNotesList(noteManager);
         }
     });
@@ -190,6 +190,8 @@ function initializeEventListeners() {
         if (activeFolder) {
             const newNote = noteManager.createNewNote(activeFolder.id);
             renderNotesList(noteManager);
+            editor.editorTitle.textContent = newNote.title;
+            editor.editorContent.textContent = newNote.content;
         }
     });
 }
