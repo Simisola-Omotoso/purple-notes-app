@@ -23,7 +23,8 @@ class NoteManager {
             folderId: folderId
         };
         this.notes.unshift(newNote);
-        this.activeNote = newNote;
+        this.setActiveNote(newNote.id);
+        renderNotesList(this);
         return newNote;
     }
 
@@ -64,7 +65,8 @@ class FolderManager {
             active: false
         };
         this.folders.push(newFolder);
-        return newFolder;
+        this.setActiveFolder(newFolder.id);
+        renderFoldersList(this);
     }
 
     setActiveFolder(folderId) {
@@ -169,6 +171,8 @@ function initializeEventListeners() {
             if (activeFolderNotes.length > 0) {
                 noteManager.setActiveNote(activeFolderNotes[0].id);
                 updateEditor(noteManager.activeNote);
+            } else {
+                clearEditor();
             }
         }
     });
@@ -177,28 +181,28 @@ function initializeEventListeners() {
         const noteItem = e.target.closest('.note-item');
         if (noteItem) {
             noteManager.setActiveNote(Number(noteItem.dataset.id));
-            editor.editorTitle.textContent = noteManager.activeNote.title;
-            editor.editorContent.textContent = noteManager.activeNote.content;
+            updateEditor(noteManager.activeNote);
             renderNotesList(noteManager);
         }
     });
 
-    document.querySelector('.sidebar-header').addEventListener('click', () => {
-        console.log('Add folder button clicked');
+    document.querySelector('.add-folder').addEventListener('click', () => {
         const folderName = prompt('Enter folder name:');
         if (folderName) {
             folderManager.createFolder(folderName);
             renderFoldersList(folderManager);
+            renderNotesList(noteManager);
         }
     });
 
-    document.querySelector('.notes-header .add-button').addEventListener('click', () => {
+    document.querySelector('.add-note').addEventListener('click', () => {
         const activeFolder = folderManager.getActiveFolder();
         if (activeFolder) {
             const newNote = noteManager.createNewNote(activeFolder.id);
             renderNotesList(noteManager);
-            editor.editorTitle.textContent = newNote.title;
-            editor.editorContent.textContent = newNote.content;
+            updateEditor(newNote);
+        } else {
+            alert('Please select a folder first.');
         }
     });
 }
@@ -208,7 +212,11 @@ function updateEditor(note) {
         editor.editorTitle.textContent = note.title;
         editor.editorContent.textContent = note.content;
     } else {
-        editor.editorTitle.textContent = '';
-        editor.editorContent.textContent = '';
+        clearEditor();
     }
+}
+
+function clearEditor() {
+    editor.editorTitle.textContent = 'New Note';
+    editor.editorContent.textContent = '';
 }
