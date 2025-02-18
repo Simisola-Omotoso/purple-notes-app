@@ -5,37 +5,33 @@ class NoteManager {
     }
 
     loadNotes() {
-        this.notes = [
-            { id: 1, title: 'Meeting Notes', content: '', date: '2/15/2025', folderId: 1 },
-            { id: 2, title: 'Project Ideas', content: '', date: '2/15/2025', folderId: 1 },
-            { id: 3, title: 'Shopping List', content: '', date: '2/15/2025', folderId: 1 },
-            { id: 4, title: 'Travel Plans', content: '', date: '2/15/2025', folderId: 1 }
-        ];
-        this.activeNote = this.notes[0];
+        const savedNotes = JSON.parse(localStorage.getItem('notes'));
+        if (savedNotes) {
+            this.notes = savedNotes;
+        }
+    }
+
+    saveNotes() {
+        localStorage.setItem('notes', JSON.stringify(this.notes));
     }
 
     createNewNote(folderId) {
-        const newNote = {
-            id: this.notes.length + 1,
-            title: 'Untitled',
-            content: '',
-            date: new Date().toLocaleDateString(),
-            folderId: folderId
-        };
-        this.notes.unshift(newNote);
-        this.setActiveNote(newNote.id);
-        renderNotesList(this);
+        const newNote = { id: Date.now(), title: 'New Note', content: '', date: new Date().toLocaleDateString(), folderId };
+        this.notes.push(newNote);
+        this.saveNotes(); // Save after creating a new note
         return newNote;
     }
 
-    setActiveNote(noteId) {
-        this.activeNote = this.notes.find(note => note.id === noteId);
+    setActiveNote(id) {
+        this.activeNote = this.notes.find(note => note.id === id);
+        this.saveNotes(); // Save after setting active note
     }
 
     updateNoteContent(content) {
         if (this.activeNote) {
             this.activeNote.content = content;
             this.activeNote.date = new Date().toLocaleDateString();
+            this.saveNotes(); // Save after updating note content
         }
     }
 
@@ -47,33 +43,34 @@ class NoteManager {
 class FolderManager {
     constructor() {
         this.folders = [];
+        this.activeFolder = null;
     }
 
     loadFolders() {
-        this.folders = [
-            { id: 1, name: 'Personal', active: true },
-            { id: 2, name: 'Work', active: false },
-            { id: 3, name: 'Projects', active: false },
-            { id: 4, name: 'Archive', active: false }
-        ];
+        const savedFolders = JSON.parse(localStorage.getItem('folders'));
+        if (savedFolders) {
+            this.folders = savedFolders;
+        }
+    }
+
+    saveFolders() {
+        localStorage.setItem('folders', JSON.stringify(this.folders));
     }
 
     createFolder(name) {
-        const newFolder = {
-            id: this.folders.length + 1,
-            name: name,
-            active: false
-        };
+        const newFolder = { id: Date.now(), name, active: false };
         this.folders.push(newFolder);
-        this.setActiveFolder(newFolder.id);
+        this.saveFolders(); // Save after creating a new folder
     }
 
-    setActiveFolder(folderId) {
-        this.folders.forEach(folder => folder.active = folder.id === folderId);
+    setActiveFolder(id) {
+        this.folders.forEach(folder => folder.active = folder.id === id);
+        this.activeFolder = this.folders.find(folder => folder.id === id);
+        this.saveFolders(); // Save after setting active folder
     }
 
     getActiveFolder() {
-        return this.folders.find(folder => folder.active);
+        return this.activeFolder;
     }
 }
 
@@ -90,12 +87,13 @@ class Editor {
         this.editorTitle.addEventListener('input', (e) => {
             if (this.noteManager.activeNote) {
                 this.noteManager.activeNote.title = e.target.textContent.trim();
-                renderNotesList();
+                this.noteManager.saveNotes(); // Save after updating note title
             }
         });
 
         this.editorContent.addEventListener('input', debounce((e) => {
-            this.saveContent(e.target.innerHTML);
+            this.noteManager.activeNote.content = e.target.innerHTML;
+            this.noteManager.saveNotes();
         }, 300));
     }
 
@@ -187,6 +185,8 @@ noteManager.loadNotes();
 const editor = new Editor(noteManager); // Ensure this is created after noteManager
 
 document.addEventListener('DOMContentLoaded', () => {
+    folderManager.loadFolders();
+    noteManager.loadNotes();
     renderFoldersList(folderManager);
     renderNotesList(noteManager);
     initializeEventListeners(); // Ensure this is called after rendering
