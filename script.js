@@ -162,7 +162,7 @@ function initializeEventListeners() {
         const folderItem = e.target.closest('.folder-item');
         if (folderItem) {
             const folderId = Number(folderItem.dataset.id);
-            folderManager.setActiveFolder(Number(folderItem.dataset.id));
+            folderManager.setActiveFolder(folderId);
             renderFoldersList(folderManager);
             renderNotesList(noteManager);
 
@@ -201,6 +201,7 @@ function initializeEventListeners() {
             renderNotesList(noteManager);
             editor.editorTitle.textContent = newNote.title;
             editor.editorContent.textContent = newNote.content;
+        }
     });
 }
 
