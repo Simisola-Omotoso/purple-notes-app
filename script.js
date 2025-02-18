@@ -164,6 +164,12 @@ function initializeEventListeners() {
             folderManager.setActiveFolder(Number(folderItem.dataset.id));
             renderFoldersList(folderManager);
             renderNotesList(noteManager);
+
+            const activeFolderNotes = noteManager.getNotesByFolder(folderManager.getActiveFolder()?.id);
+            if (activeFolderNotes.length > 0) {
+                noteManager.setActiveNote(activeFolderNotes[0].id);
+                updateEditor(noteManager.activeNote);
+            }
         }
     });
 
@@ -195,4 +201,14 @@ function initializeEventListeners() {
             editor.editorContent.textContent = newNote.content;
         }
     });
+}
+
+function updateEditor(note) {
+    if (note) {
+        editor.editorTitle.textContent = note.title;
+        editor.editorContent.textContent = note.content;
+    } else {
+        editor.editorTitle.textContent = '';
+        editor.editorContent.textContent = '';
+    }
 }
