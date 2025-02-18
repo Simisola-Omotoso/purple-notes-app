@@ -102,15 +102,15 @@ class Editor {
     }
 
     initializeToolbarListeners() {
-        document.querySelector('.toolbar-button.bold').addEvenetListener('click', () => {
+        document.querySelector('.toolbar-button.bold').addEventListener('click', () => {
             document.execCommand('bold');
         });
 
-        document.querySelector('.toolbar-button.italic').addEvenetListener('click', () => {
+        document.querySelector('.toolbar-button.italic').addEventListener('click', () => {
             document.execCommand('italic');
         });
 
-        document.querySelector('.toolbar-button.underline').addEvenetListener('click', () => {
+        document.querySelector('.toolbar-button.underline').addEventListener('click', () => {
             document.execCommand('underline');
         });
     }
@@ -180,14 +180,6 @@ function initializeEventListeners() {
             folderManager.setActiveFolder(folderId);
             renderFoldersList(folderManager);
             renderNotesList(noteManager);
-
-            const activeFolderNotes = noteManager.getNotesByFolder(folderId);
-            if (activeFolderNotes.length > 0) {
-                noteManager.setActiveNote(activeFolderNotes[0].id);
-                updateEditor(noteManager.activeNote);
-            } else {
-                clearEditor();
-            }
         }
     });
 
@@ -214,22 +206,42 @@ function initializeEventListeners() {
         if (activeFolder) {
             const newNote = noteManager.createNewNote(activeFolder.id);
             renderNotesList(noteManager);
-            editor.editorTitle.textContent = newNote.title;
-            editor.editorContent.textContent = newNote.content;
+            updateEditor(newNote);
         }
     });
 }
 
 function updateEditor(note) {
-    if (note) {
-        editor.editorTitle.textContent = note.title;
-        editor.editorContent.textContent = note.content;
-    } else {
-        clearEditor();
-    }
+    document.querySelector('.editor-title').textContent = note.title;
+    document.querySelector('.editor-content').innerHTML = note.content;
 }
 
-function clearEditor() {
-    editor.editorTitle.textContent = 'New Note';
-    editor.editorContent.textContent = '';
+// Rendering Functions
+function renderFoldersList(folderManager) {
+    const folderList = document.querySelector('.folder-list');
+    folderList.innerHTML = folderManager.folders.map(folder => `
+        <li class="folder-item ${folder.active ? 'active' : ''}" data-id="${folder.id}">
+            <i class="far fa-folder"></i> ${folder.name}
+        </li>
+    `).join('');
 }
+
+function renderNotesList(noteManager) {
+    const noteList = document.querySelector('.note-list');
+    const activeFolder = folderManager.getActiveFolder();
+    const filteredNotes = noteManager.getNotesByFolder(activeFolder?.id);
+    
+    noteList.innerHTML = filteredNotes.map(note => `
+        <li class="note-item ${note === noteManager.activeNote ? 'active' : ''}" data-id="${note.id}">
+            <div class="note-title">${note.title}</div>
+            <div class="note-date">${note.date}</div>
+        </li>
+    `).join('');
+}
+
+// App Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    renderFoldersList(folderManager);
+    renderNotesList(noteManager);
+    initializeEventListeners();
+});
