@@ -85,6 +85,7 @@ class Editor {
         this.editorTitle = document.querySelector('.editor-title');
         this.editorContent = document.querySelector('.editor-content');
         this.initializeEventListeners();
+        this.initializeToolbarListeners();
     }
 
     initializeEventListeners() {
@@ -96,8 +97,22 @@ class Editor {
         });
 
         this.editorContent.addEventListener('input', debounce((e) => {
-            this.saveContent(e.target.textContent);
+            this.saveContent(e.target.innerHTML);
         }, 300));
+    }
+
+    initializeToolbarListeners() {
+        document.querySelector('.toolbar-button.bold').addEvenetListener('click', () => {
+            document.execCommand('bold');
+        });
+
+        document.querySelector('.toolbar-button.italic').addEvenetListener('click', () => {
+            document.execCommand('italic');
+        });
+
+        document.querySelector('.toolbar-button.underline').addEvenetListener('click', () => {
+            document.execCommand('underline');
+        });
     }
 
     saveContent(content) {
