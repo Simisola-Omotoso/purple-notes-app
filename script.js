@@ -80,12 +80,10 @@ class FolderManager {
 class Editor {
     constructor(noteManager) {
         this.noteManager = noteManager;
-        this.undoStack = [];
-        this.redoStack = [];
         this.editorTitle = document.querySelector('.editor-title');
         this.editorContent = document.querySelector('.editor-content');
         this.initializeEventListeners();
-        this.initializeToolbarListeners();
+        this.initializeToolbarListeners(); // Ensure this is called
     }
 
     initializeEventListeners() {
@@ -215,33 +213,3 @@ function updateEditor(note) {
     document.querySelector('.editor-title').textContent = note.title;
     document.querySelector('.editor-content').innerHTML = note.content;
 }
-
-// Rendering Functions
-function renderFoldersList(folderManager) {
-    const folderList = document.querySelector('.folder-list');
-    folderList.innerHTML = folderManager.folders.map(folder => `
-        <li class="folder-item ${folder.active ? 'active' : ''}" data-id="${folder.id}">
-            <i class="far fa-folder"></i> ${folder.name}
-        </li>
-    `).join('');
-}
-
-function renderNotesList(noteManager) {
-    const noteList = document.querySelector('.note-list');
-    const activeFolder = folderManager.getActiveFolder();
-    const filteredNotes = noteManager.getNotesByFolder(activeFolder?.id);
-    
-    noteList.innerHTML = filteredNotes.map(note => `
-        <li class="note-item ${note === noteManager.activeNote ? 'active' : ''}" data-id="${note.id}">
-            <div class="note-title">${note.title}</div>
-            <div class="note-date">${note.date}</div>
-        </li>
-    `).join('');
-}
-
-// App Initialization
-document.addEventListener('DOMContentLoaded', () => {
-    renderFoldersList(folderManager);
-    renderNotesList(noteManager);
-    initializeEventListeners();
-});
