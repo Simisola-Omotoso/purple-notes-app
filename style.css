@@ -63,8 +63,8 @@
 body {
     display: flex;
     min-height: 100vh;
-    background-color: var(--dark-bg);
-    color: var(--text-white);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 /* ============================= */
