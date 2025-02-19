@@ -306,6 +306,23 @@ window.addEventListener('load', () => {
     if (savedEditorWidth) editorSection.style.width = `${savedEditorWidth}px`;
 });
 
+function formatText(headingType) {
+    const editorContent = document.querySelector('.editor-content');
+    const selection = window.getSelection();
+
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const selectedText = range.toString();
+
+        if (selectedText) {
+            const headingElement = document.createElement(headingType);
+            headingElement.textContent = selectedText;
+            range.deleteContents();
+            range.insertNode(headingElement);
+        }
+    }
+}
+
 // Debounce
 function debounce(func, wait) {
     let timeout;
