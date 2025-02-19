@@ -198,6 +198,10 @@ function toggleTheme() {
     localStorage.setItem('theme', newTheme);
 }
 
+function formatHeading(format) {
+    document.execCommand('formatBlock', false, format);
+}
+
 initializeTheme();
 
 document.querySelector('.theme-switch').addEventListener('click', toggleTheme);
@@ -341,6 +345,18 @@ function formatText(headingType) {
         }
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTheme();
+    document.querySelector('.theme-switch').addEventListener('click', toggleTheme);
+    const headingButtons = document.querySelectorAll('.toolbar-button[data-format]');
+    headingButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const format = button.getAttribute('data-format');
+            formatHeading(format);
+        });
+    });
+});
 
 // Debounce
 function debounce(func, wait) {
